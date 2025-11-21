@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
 #include <sys/stat.h>
+
 #include <time.h>
 
 #include "../include/file_ops.h"
@@ -58,7 +60,7 @@ void rename_file()
     }
     else
     {
-        perror("error rnaming file");
+        perror("error renaming file");
     }
 }
 void file_info()
@@ -86,6 +88,7 @@ void copy_file()
     char originalfile[100];
     char copyfile[100];
     char buffer[1024];
+
     size_t bytes;
 
     printf("enter the source file name : ");
@@ -114,8 +117,71 @@ void copy_file()
     {
         fwrite(buffer, 1, bytes, fc);
     }
-    printf("file coppied succesfully!!!!\n");
+    printf("file coppied successfully!!!!\n");
 
     fclose(fo);
     fclose(fc);
+}
+void move_file()
+{
+    char sourceFile[100];
+    char destinationPath[100];
+
+    printf("enter source file path: ");
+    fgets(sourceFile, sizeof(sourceFile), stdin);
+    sourceFile[strcspn(sourceFile, "\n")] = 0;
+
+    printf("Enter the destination file (include filename): ");
+    fgets(destinationPath, sizeof(destinationPath), stdin);
+    destinationPath[strcspn(destinationPath, "\n")] = 0;
+
+    if (rename(sourceFile, destinationPath) == 0)
+    {
+
+        printf("File Moved successfully \n");
+    }
+    else
+    {
+        printf("Move Faild \n");
+    }
+}
+
+void list_files()
+{
+
+    char directoryPath[200];
+    char fullPath[300];
+
+    printf("enter the directory path you want list of \n");
+    fgets(directoryPath, sizeof(directoryPath), stdin);
+    directoryPath[strcspn(directoryPath, "\n")] = 0;
+
+    DIR *dir = opendir(directoryPath);
+    if (dir == NULL)
+    {
+
+        printf("directory not found");
+        return;
+    }
+    struct dirent *entry;
+    printf("File is in %s : \n", directoryPath);
+    while ((entry = readdir(dir)) != NULL)
+    {
+        if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+        {
+            sprintf(fullPath, "%s/%s", directoryPath, entry->d_name);
+
+            struct stat fileStat;
+            if (stat(fullPath, &fileStat) == 0)
+            {
+                printf("%-30s %101d bytes %s", entry->d_name, fileStat.st_size, ctime(&fileStat.st_mtime));
+
+                if (S_ISDIR(fileStat.st_mode))
+                    printf("[DIR]\n");
+                else
+                    printf("[FILE]\n");
+            }
+        }
+    }
+    closedir(dir);
 }

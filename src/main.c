@@ -11,12 +11,14 @@ int main()
 
         printf("======ADVANCED FILE MANAGER =======\n");
 
-        printf("1.create file .\n");
-        printf("2.delete file .\n");
-        printf("3.Rename file .\n");
-        printf("4.File info .\n");
+        printf("1.create file \n");
+        printf("2.delete file \n");
+        printf("3.Rename file \n");
+        printf("4.File info \n");
         printf("5.Copy file\n");
-        printf("0.Exit .\n");
+        printf("6.Move File \n");
+        printf("7. List Files\n");
+        printf("0.Exit \n");
         printf(" Choose what you would like to do:.\n");
 
         scanf("%d", &input);
@@ -43,6 +45,12 @@ int main()
             break;
         case 5:
             copy_file();
+            break;
+        case 6:
+            move_file();
+            break;
+        case 7:
+            list_files();
             break;
         case 0:
             printf("Exiting ....");
