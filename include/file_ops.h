@@ -4,5 +4,6 @@
 void create_file();
 void delete_file();
 void rename_file();
+void copy_file();
 void file_info();
 #endif

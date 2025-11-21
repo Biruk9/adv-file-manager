@@ -15,6 +15,7 @@ int main()
         printf("2.delete file .\n");
         printf("3.Rename file .\n");
         printf("4.File info .\n");
+        printf("5.Copy file\n");
         printf("0.Exit .\n");
         printf(" Choose what you would like to do:.\n");
 
@@ -39,6 +40,9 @@ int main()
 
         case 4:
             file_info();
+            break;
+        case 5:
+            copy_file();
             break;
         case 0:
             printf("Exiting ....");

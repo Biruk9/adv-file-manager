@@ -80,3 +80,42 @@ void file_info()
         perror("Error getting file info");
     }
 }
+
+void copy_file()
+{
+    char originalfile[100];
+    char copyfile[100];
+    char buffer[1024];
+    size_t bytes;
+
+    printf("enter the source file name : ");
+    fgets(originalfile, sizeof(originalfile), stdin);
+    originalfile[strcspn(originalfile, "\n")] = 0;
+
+    FILE *fo = fopen(originalfile, "rb");
+    if (fo == NULL)
+    {
+        printf("cannot open source file!\n");
+        return;
+    }
+
+    printf("enter the destination file name : ");
+    fgets(copyfile, sizeof(copyfile), stdin);
+    copyfile[strcspn(copyfile, "\n")] = 0;
+
+    FILE *fc = fopen(copyfile, "wb");
+    if (fc == NULL)
+    {
+        printf("cannot create destination file!\n");
+        fclose(fo);
+        return;
+    }
+    while ((bytes = fread(buffer, 1, sizeof(buffer), fo)) > 0)
+    {
+        fwrite(buffer, 1, bytes, fc);
+    }
+    printf("file coppied succesfully!!!!\n");
+
+    fclose(fo);
+    fclose(fc);
+}
