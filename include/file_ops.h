@@ -8,5 +8,8 @@ void copy_file();
 void file_info();
 void move_file();
 void list_files();
+void create_folder();
+void delete_folder();
+void Help_Menu();
 
 #endif
