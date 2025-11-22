@@ -11,6 +11,11 @@
 
 int main()
 {
+
+    char theme[20];
+    char default_dir[200];
+    int logging;
+
     // system("cls");
     int input;
 
@@ -80,6 +85,10 @@ int main()
             break;
         }
     } while (input != 0);
+
+    Write_log("program started");
+    create_default_config();
+    load_config(theme, default_dir, &logging);
 
     return 0;
 }

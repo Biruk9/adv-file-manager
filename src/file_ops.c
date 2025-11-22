@@ -34,8 +34,12 @@ void Help_Menu()
 
 void create_file()
 {
+
 #define MAX_PATH 256
-    char filename[MAX_PATH]; // buffer to store filename
+    char filename[MAX_PATH];
+    char folderpath[100];
+    char logmsg[200];
+
     printf(YELLOW "Enter the name of the file to create:" RESET);
     fgets(filename, sizeof(filename), stdin);
     filename[strcspn(filename, "\n")] = 0;
@@ -49,6 +53,8 @@ void create_file()
     {
         printf(GREEN "File '%s' created successfully ! \n" RESET, filename);
         fclose(fp);
+        sprintf(logmsg, "Created  a File : %s", filename);
+        Write_log(logmsg);
     }
 }
 void delete_file()
@@ -56,6 +62,10 @@ void delete_file()
 #define MAX_PATH 256
     char filename[MAX_PATH];
     char choice;
+
+    char folderpath[100];
+    char logmsg[200];
+
     printf(YELLOW "Enter the name of file to delete: " RESET);
     fgets(filename, sizeof(filename), stdin);
 
@@ -68,6 +78,8 @@ void delete_file()
         if (remove(filename) == 0)
         {
             printf(GREEN "file '%s' deleted successfully !  \n" RESET, filename);
+            sprintf(logmsg, "Deleted a File : %s", filename);
+            Write_log(logmsg);
         }
         else
         {
@@ -84,6 +96,10 @@ void rename_file()
 {
     char oldname[100];
     char newname[100];
+
+    char folderpath[100];
+    char logmsg[200];
+
     printf(YELLOW "Enter the file name to rename :" RESET);
     fgets(oldname, sizeof(oldname), stdin);
     oldname[strcspn(oldname, "\n")] = 0;
@@ -95,6 +111,9 @@ void rename_file()
     if (rename(oldname, newname) == 0)
     {
         printf(GREEN "File renamed successfully!\n" RESET);
+
+        sprintf(logmsg, "A File renamed : %s", newname);
+        Write_log(logmsg);
     }
     else
     {
@@ -127,6 +146,9 @@ void copy_file()
     char copyfile[100];
     char buffer[1024];
 
+    char folderpath[100];
+    char logmsg[200];
+
     size_t bytes;
 
     printf(YELLOW "Enter the source file name : " RESET);
@@ -156,7 +178,8 @@ void copy_file()
         fwrite(buffer, 1, bytes, fc);
     }
     printf(GREEN "File coppied successfully!!!!\n" RESET);
-
+    sprintf(logmsg, "File coppied : %s", copyfile);
+    Write_log(logmsg);
     fclose(fo);
     fclose(fc);
 }
@@ -164,6 +187,9 @@ void move_file()
 {
     char sourceFile[100];
     char destinationPath[100];
+
+    char folderpath[100];
+    char logmsg[200];
 
     printf(YELLOW "Enter source file path: " RESET);
     fgets(sourceFile, sizeof(sourceFile), stdin);
@@ -177,6 +203,10 @@ void move_file()
     {
 
         printf(GREEN "File Moved successfully \n" RESET);
+
+        sprintf(logmsg, GREEN "File moved : %s" RESET, destinationPath);
+
+        Write_log(logmsg);
     }
     else
     {
@@ -227,6 +257,9 @@ void create_folder()
 {
     char createfolder[100];
 
+    char folderpath[100];
+    char logmsg[200];
+
     printf(YELLOW "Enter the name of the folder you want create\n" RESET);
     fgets(createfolder, sizeof(createfolder), stdin);
     createfolder[strcspn(createfolder, "\n")] = 0;
@@ -234,6 +267,8 @@ void create_folder()
     if (mkdir(createfolder) == 0)
     {
         printf(GREEN "folder created successfully \n" RESET);
+        sprintf(logmsg, GREEN "A folder created : %s" RESET, createfolder);
+        Write_log(logmsg);
     }
     else
     {
@@ -274,6 +309,7 @@ int delete_folder_recursive(const char *path)
 void delete_folder()
 {
     char folderpath[100];
+    char logmsg[200];
 
     char choice;
 
@@ -291,6 +327,8 @@ void delete_folder()
         if (delete_folder_recursive(folderpath) == 0)
         {
             printf(GREEN "Folder deleted succesfully\n" RESET);
+            sprintf(logmsg, GREEN "A folder deleted : %s" RESET, folderpath);
+            Write_log(logmsg);
         }
         else
         {
@@ -301,4 +339,65 @@ void delete_folder()
     {
         printf("Operation cancelled");
     }
+}
+
+void Write_log(const char *message)
+{
+    mkdir("logs");
+    FILE *log = fopen("logs/log.txt", "a");
+    if (!log)
+        return;
+
+    time_t now = time(NULL);
+    char *time_str = ctime(&now);
+    time_str[strcspn(time_str, "\n")] = 0;
+
+    fprintf(log, "[%s] %s\n", time_str, message);
+    fclose(log);
+}
+
+void load_config(char *theme, char *default_dir, int *logging)
+{
+    FILE *config = fopen("setting.cfg", "r");
+    if (!config)
+        return;
+
+    char line[100];
+    while (fgets(line, sizeof(line), config))
+    {
+        line[strcspn(line, "\n")] = 0; // remove newline
+
+        if (strstr(line, "theme="))
+            sscanf(line, "theme=%s", theme);
+
+        else if (strstr(line, "default_dir="))
+            sscanf(line, "default_dir=%s", default_dir);
+
+        else if (strstr(line, "logging="))
+        {
+            char value[10];
+            sscanf(line, "logging=%s", value);
+            *logging = (strcmp(value, "on") == 0);
+        }
+    }
+    fclose(config);
+}
+void create_default_config()
+{
+    FILE *config = fopen("setting.cfg", "r");
+    if (config)
+    {
+        fclose(config); // file exists, nothing to do
+        return;
+    }
+
+    config = fopen("setting.cfg", "w");
+    if (!config)
+        return;
+
+    fprintf(config, "theme=on\n");
+    fprintf(config, "default_dir=.\n");
+    fprintf(config, "logging=on\n");
+
+    fclose(config);
 }

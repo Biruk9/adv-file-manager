@@ -7,6 +7,9 @@
 *.tmp
 *.log
 *.txt
+*.o
+filemanager
+
 
 # Ignore OS files
 .DS_Store
