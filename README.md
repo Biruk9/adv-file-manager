@@ -66,37 +66,21 @@ Usage 📝
 
 Launch the program and choose from the menu options:
 
-Create File
+Create File, Delete File, Rename File, File Info,Copy File, Move File, List Files, Create Folder, Delete Folder
 
-Delete File
-
-Rename File
-
-File Info
-
-Copy File
-
-Move File
-
-List Files
-
-Create Folder
-
-Delete Folder
-
-Exit
+And  Exit
 
 Logs are automatically saved in logs/log.txt.
 
 Configuration settings are loaded from setting.cfg.
 
-Example Config (setting.cfg) 
+Example Config (setting.cfg) :
 
 theme=on
 default_dir=.
 logging=on
 
-Notes & Future Improvements 
+Notes & Future Improvements :
 
 Add undo functionality for accidental deletions.
 
@@ -106,10 +90,10 @@ Add multi-platform compatibility checks.
 
 Extend test mode for automated demonstrations
 
-Author ✍️
+Author :
 
 Biruk Aklilu Ambaye
 
 GitHub: Biruk9
 
-Email:akibiruk39@gmail.com
+Email: akibiruk39@gmail.com
